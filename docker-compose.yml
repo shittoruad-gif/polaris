@@ -1,0 +1,23 @@
+# 手元での動作確認用。Coolifyでは `docker-compose.coolify.yml` 同等を自動生成。
+version: '3.9'
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: polaris
+      POSTGRES_PASSWORD: polaris
+      POSTGRES_DB: polaris
+    volumes:
+      - polaris_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on: [db]
+    env_file: .env
+    ports:
+      - "3000:3000"
+volumes:
+  polaris_db:

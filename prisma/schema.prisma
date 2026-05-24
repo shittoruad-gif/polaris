@@ -1,0 +1,40 @@
+// Polaris schema
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+
+model Sale {
+  id        Int      @id @default(autoincrement())
+  month     String   @unique // "YYYY-MM"
+  amount    Int
+  newCust   Int      @default(0)
+  repeatPct Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  visits    Int      @default(0)
+  lastVisit DateTime?
+  spend     Int      @default(0)
+  tag       String   @default("新規")  // 優良/安定/新規/離脱予兆
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  author    String
+  stars     Int
+  text      String
+  source    String   @default("manual")
+  reply     String?
+  replied   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
